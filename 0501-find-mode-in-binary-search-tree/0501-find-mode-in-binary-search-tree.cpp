@@ -11,29 +11,79 @@
  */
 class Solution {
 public:
-    int currFreq = 0, mxFreq = 0, prevVal = INT_MIN;
+    int mxFreq = 0, currFreq = 0, prevVal = INT_MIN;
     vector<int> ans;
-    void f(TreeNode* root){
-        if(!root) return;
-        f(root->left);
+
+    void Inorder_Traversal_For_Getting_MaxFreq(TreeNode* root){
+        if(root == NULL) return;
+        Inorder_Traversal_For_Getting_MaxFreq(root->left);
+
+        if(prevVal==root->val) currFreq++;
+        else currFreq = 1;
+
+        if(currFreq>mxFreq){
+            mxFreq = currFreq;
+        }
+
+        prevVal = root->val;
+
+        Inorder_Traversal_For_Getting_MaxFreq(root->right);
+    }
+
+
+    void Inorder_Traversal_For_Getting_elements_Having_Freq_MaxFreq(TreeNode* root){
+        if(root==NULL) return;
+
+        Inorder_Traversal_For_Getting_elements_Having_Freq_MaxFreq(root->left);
+
         if(prevVal == root->val) currFreq++;
         else currFreq = 1;
-        if(currFreq>mxFreq){
-            ans.clear();
-            ans.push_back(root->val);
-            mxFreq = currFreq;
-        }else if(currFreq==mxFreq){
-            ans.push_back(root->val);
-        }
-        prevVal = root->val;
-        f(root->right);
+        
 
+        if(currFreq == mxFreq) ans.push_back(root->val);
+
+        prevVal = root->val;
+        Inorder_Traversal_For_Getting_elements_Having_Freq_MaxFreq(root->right);
     }
+
+
+
+
     vector<int> findMode(TreeNode* root) {
-        f(root);
+        Inorder_Traversal_For_Getting_MaxFreq(root);
+        currFreq = 0;
+        prevVal = INT_MIN;
+        Inorder_Traversal_For_Getting_elements_Having_Freq_MaxFreq(root);
         return ans;
     }
 };
+
+
+// class Solution {
+// public:
+//     int currFreq = 0, mxFreq = 0, prevVal = INT_MIN;
+//     vector<int> ans;
+//     void inorderTraversal(TreeNode* root){
+//         if(!root) return;
+//         inorderTraversal(root->left);
+//         if(prevVal == root->val) currFreq++;
+//         else currFreq = 1;
+//         if(currFreq>mxFreq){
+//             ans.clear();
+//             ans.push_back(root->val);
+//             mxFreq = currFreq;
+//         }else if(currFreq==mxFreq){
+//             ans.push_back(root->val);
+//         }
+//         prevVal = root->val;
+//         inorderTraversal(root->right);
+
+//     }
+//     vector<int> findMode(TreeNode* root) {
+//         inorderTraversal(root);
+//         return ans;
+//     }
+// };
 
 
 
