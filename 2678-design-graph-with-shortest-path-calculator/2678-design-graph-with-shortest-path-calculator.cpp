@@ -4,8 +4,8 @@ public:
     unordered_map<int,vector<pair<int,int>>> gr;
     Graph(int n, vector<vector<int>>& edges) {
         this->n = n;
-        for(auto& it : edges){
-            gr[it[0]].push_back({it[1],it[2]});
+        for(auto& edge : edges){
+            gr[edge[0]].push_back({edge[1],edge[2]});
         }
     }
     
@@ -15,29 +15,28 @@ public:
     
     int shortestPath(int node1, int node2) {
         priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
-        vector<int> dis(n,INT_MAX);
-        dis[node1] = 0;
+        vector<int> dist(n,INT_MAX);
+
         pq.push({0,node1});
 
         while(!pq.empty()){
+            int curDist = pq.top().first;
             int node = pq.top().second;
-            int curDis = pq.top().first;
             pq.pop();
 
+            if(curDist > dist[node]) continue;
+            if(node==node2) return curDist;
 
-            if(curDis > dis[node]) continue;
-            if(node==node2) return curDis;
+            for(auto it : gr[node]){
+                if(dist[it.first] > curDist + it.second ){
+                    int nwDist = curDist + it.second;
+                    dist[it.first] = nwDist;
 
-            for(auto& it : gr[node]){
-                if(dis[it.first] > curDis + it.second){
-                    int newDis = curDis + it.second;
-                    dis[it.first] = newDis;
-                    pq.push({newDis,it.first});
+                    pq.push({nwDist,it.first});
                 }
             }
         }
         return -1;
-        
     }
 };
 
